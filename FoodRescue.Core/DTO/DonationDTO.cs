@@ -8,10 +8,12 @@ namespace FoodRescue.Core.DTO
 {
 	public class DonationDTO
 	{
+		public int Id { get; set; }
 		public string FoodType { get; set; }
 		public double Quantity { get; set; } // כמות ב-ק"ג
 		public DateTime dateTime { get; set; }
 		public bool IsClaimed { get; set; }
 		public BusinessDTO Business { get; set; }
+
 	}
 }
