@@ -43,8 +43,8 @@ namespace Food_Rescue.Controllers
 				// 2. יצירת רשימת ה"טענות" (Claims)
 				var claims = new List<Claim>
 				{
-					new Claim(ClaimTypes.Name, user.UserName),
-					new Claim(ClaimTypes.Role, user.Role.ToString()), // התפקיד (Business/Charity)
+					new Claim("Name", user.UserName),
+					new Claim("Role", user.Role.ToString()), // התפקיד (Business/Charity)
                     new Claim("UserId", user.Id.ToString())
 				};
 
