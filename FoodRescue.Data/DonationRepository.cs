@@ -30,12 +30,16 @@ namespace FoodRescue.Data
 
 		public async Task<IEnumerable<Donation>> GetAllAsync()
 		{
-			return await _context.donations.ToListAsync();
+			return await _context.donations
+							 .Include(d => d.Business)
+							 .ToListAsync();
 		}
 
 		public async Task<Donation> GetByIdAsync(int id)
 		{
-			return await _context.donations.FirstOrDefaultAsync(x => x.Id == id);
+			return await _context.donations
+							 .Include(d => d.Business)
+							 .FirstOrDefaultAsync(x => x.Id == id);
 		}
 
 		public async Task UpdateAsync(int id, Donation value)
@@ -44,7 +48,6 @@ namespace FoodRescue.Data
 			s.dateTime = value.dateTime;
 			s.Quantity = value.Quantity;
 			s.FoodType = value.FoodType;
-			s.BusinessID = value.BusinessID;
 			s.IsClaimed = value.IsClaimed;
 		}
 		public async Task SaveAsync()

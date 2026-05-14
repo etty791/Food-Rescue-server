@@ -12,7 +12,7 @@ namespace FoodRescue.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	//[Authorize]
+	[Authorize]
 	public class BusinessesController : ControllerBase
 	{
 		private readonly IBusinessService _businessService;

@@ -14,6 +14,7 @@ namespace FoodRescue.Core.Services
 		public Task AddDonationAsync(Donation val);
 		public Task DeleteDonationAsync(int id);
 		public Task UpdateDonationAsync(int id, Donation val);
+		public Task ClaimDonationAsync(int id);
 		public Task AddDonationToBusinessAsync(int businessId, Donation val);
 
 		public Task<IEnumerable<Donation>> GetDonationsByBusinessIdAsync(int id);

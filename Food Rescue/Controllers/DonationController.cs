@@ -13,7 +13,7 @@ namespace FoodRescue.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	//[Authorize]
+	[Authorize]
 	public class DonationController : ControllerBase
 	{
 		private readonly IDonationService _donationService;
@@ -47,7 +47,7 @@ namespace FoodRescue.API.Controllers
 
 		// POST api/<BusinessesController>
 		[HttpPost]
-		//[Authorize(Roles = "Business")]
+		[Authorize(Roles = "Business")]
 		public async Task<ActionResult> Post([FromBody] DonationPostModel value)
 		{
 			// 1. חילוץ ה-UserId מהטוקן
@@ -80,6 +80,20 @@ namespace FoodRescue.API.Controllers
 			}
 			await _donationService.UpdateDonationAsync(id, donation);
 			return Ok(s);
+		}
+
+		[HttpPut("claim/{id}")]
+		[Authorize(Roles = "Charity")]
+		public async Task<ActionResult> Put(int id)
+		{
+			var donation = await _donationService.GetDonationByIdAsync(id);
+			
+			if (donation == null)
+			{
+				return NotFound();
+			}
+			await _donationService.ClaimDonationAsync(id);
+			return Ok(donation);
 		}
 
 		// DELETE api/<BusinessesController>/5
