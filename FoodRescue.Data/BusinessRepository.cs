@@ -47,7 +47,6 @@ namespace FoodRescue.Data
 			var s = await GetByIdAsync(value.Id);
 			s.Email = value.Email;
 			s.City = value.City;
-			s.Password = value.Password;
 			s.Name = value.Name;
 		}
 		public async Task SaveAsync()

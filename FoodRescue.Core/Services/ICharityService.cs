@@ -15,5 +15,7 @@ namespace FoodRescue.Core.Services
 		public Task AddCharityAsync(Charity val);
 		public Task DeleteCharityAsync(int id);
 		public Task UpdateCharityAsync(int id, Charity val);
+		public Task<Charity> GetCharityByUserIdAsync(int userId);
+
 	}
 }

@@ -50,5 +50,10 @@ namespace FoodRescue.Service
 			await _charityRepository.UpdateAsync(id, val);
 			await _charityRepository.SaveAsync();
 		}
+
+		public async Task<Charity> GetCharityByUserIdAsync(int userId)
+		{
+			return await _charityRepository.GetByUserIdAsync(userId);
+		}
 	}
 }

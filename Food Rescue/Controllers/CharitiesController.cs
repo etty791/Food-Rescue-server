@@ -36,7 +36,7 @@ namespace FoodRescue.API.Controllers
 
 		// GET api/<BusinessesController>/5
 		[HttpGet("{id}")]
-		public async Task<ActionResult> Get(int id)
+		public async Task<ActionResult> GetById(int id)
 		{
 			var c =await _charityService.GetCharityByIdAsync(id);
 			if (c == null)
@@ -46,27 +46,68 @@ namespace FoodRescue.API.Controllers
 			return Ok(_mapper.Map<CharityDTO>(c));
 		}
 
-
-		// PUT api/<BusinessesController>/5
-		[HttpPut("{id}")]
+		[HttpGet("byUserId")]
 		[Authorize(Roles = "Charity")]
-		public async Task<ActionResult> Put(int id, [FromBody] CharityPostModel value)
+		public async Task<ActionResult> GetByUserId(int id)
 		{
-			var charity = _mapper.Map<Charity>(value);
-			charity.Id = id;
-			var c =await _charityService.GetCharityByNameAsync(value.Name);
-			if (c == null)
+			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+			if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+			{
+				return Unauthorized("לא ניתן לזהות את המשתמש מהטוקן.");
+			}
+			var charity = await _charityService.GetCharityByUserIdAsync(userId);
+			if (charity == null)
 			{
 				return NotFound();
 			}
-			var user = await _userService.GetUserByIdAsync(charity.UserId);
-			if (user != null)
+			return Ok(_mapper.Map<CharityDTO>(charity));
+		}
+
+
+		// PUT api/<BusinessesController>/5
+		//[HttpPut("{id}")]
+		//[Authorize(Roles = "Charity")]
+		//public async Task<ActionResult> Put(int id, [FromBody] CharityPostModel value)
+		//{
+		//	var charity = _mapper.Map<Charity>(value);
+		//	charity.Id = id;
+		//	var c =await _charityService.GetCharityByNameAsync(value.Name);
+		//	if (c == null)
+		//	{
+		//		return NotFound();
+		//	}
+		//	var user = await _userService.GetUserByIdAsync(charity.UserId);
+		//	if (user != null)
+		//	{
+		//		user.UserName = value.UserName;
+		//		user.Password = value.Password;
+		//		await _userService.UpdateUserAsync(user.Id, user);
+		//	}
+		//	await _charityService.UpdateCharityAsync(id, charity);
+		//	return Ok();
+		//}
+
+		[HttpPut]
+		[Authorize(Roles = "Charity")]
+		public async Task<ActionResult> Put([FromBody] CharityPostModel value)
+		{
+			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+			if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
 			{
-				user.UserName = value.UserName;
-				user.Password = value.Password;
-				await _userService.UpdateUserAsync(user.Id, user);
+				return Unauthorized("לא ניתן לזהות את המשתמש מהטוקן.");
 			}
-			await _charityService.UpdateCharityAsync(id, charity);
+			var charity = await _charityService.GetCharityByUserIdAsync(userId);
+			if (charity == null)
+			{
+				return NotFound();
+			}
+			var newCharity = _mapper.Map<Charity>(value);
+			newCharity.Id = charity.Id;
+			newCharity.UserId = userId;
+
+			await _charityService.UpdateCharityAsync(charity.Id, newCharity);
 			return Ok();
 		}
 

@@ -68,35 +68,35 @@ namespace Food_Rescue.Controllers
 			return Unauthorized("שם משתמש או סיסמה שגויים");
 		}
 
-		[HttpPost("register")]
-		public async Task<ActionResult> Register([FromBody] User value) {
-			if (await _userService.IsUserNameTakenAsync(value.UserName))
-			{
-				return Conflict("User name already exists");
-			}
+		//[HttpPost("register")]
+		//public async Task<ActionResult> Register([FromBody] User value) {
+		//	if (await _userService.IsUserNameTakenAsync(value.UserName))
+		//	{
+		//		return Conflict("User name already exists");
+		//	}
 
-			var user = new User { UserName = value.UserName, Password = value.Password, Role = eRole.Business };
-			var createdUser = await _userService.AddUserAsync(user);
+		//	var user = new User { UserName = value.UserName, Password = value.Password, Role = eRole.Business };
+		//	var createdUser = await _userService.AddUserAsync(user);
 
-			var business = _mapper.Map<Business>(value);
-			business.User = user;
-			await _businessService.AddBusinessAsync(business);
+		//	var business = _mapper.Map<Business>(value);
+		//	business.User = user;
+		//	await _businessService.AddBusinessAsync(business);
 
-			return Ok();
-		}
+		//	return Ok();
+		//}
 
 		[HttpPost("register/business")]
-		public async Task<ActionResult> RegisterBusiness([FromBody] BusinessPostModel value)
+		public async Task<ActionResult> RegisterBusiness([FromBody] BusinessLoginModel value)
 		{
-			if (await _userService.IsUserNameTakenAsync(value.UserName))
+			if (await _userService.IsUserNameTakenAsync(value.User.UserName))
 			{
 				return Conflict("User name already exists");
 			}
 
-			var user = new User { UserName = value.UserName, Password = value.Password, Role = eRole.Business };
+			var user = new User { UserName = value.User.UserName, Password = value.User.Password, Role = eRole.Business };
 			var createdUser = await _userService.AddUserAsync(user);
 
-			var business = _mapper.Map<Business>(value);
+			var business = _mapper.Map<Business>(value.Business);
 			business.User = user;
 			await _businessService.AddBusinessAsync(business);
 
@@ -105,17 +105,17 @@ namespace Food_Rescue.Controllers
 
 
 		[HttpPost("register/charity")]
-		public async Task<ActionResult> RegisterCharity([FromBody] CharityPostModel value)
+		public async Task<ActionResult> RegisterCharity([FromBody] CharityLoginModel value)
 		{
-			if (await _userService.IsUserNameTakenAsync(value.UserName))
+			if (await _userService.IsUserNameTakenAsync(value.User.UserName))
 			{
 				return Conflict("User name already exists");
 			}
 
-			var userEntity = new User { UserName = value.UserName, Password = value.Password, Role = eRole.Charity };
+			var userEntity = new User { UserName = value.User.UserName, Password = value.User.Password, Role = eRole.Charity };
 			var createdUser = await _userService.AddUserAsync(userEntity);
 
-			var charity = _mapper.Map<Charity>(value);
+			var charity = _mapper.Map<Charity>(value.Charity);
 			charity.User = createdUser;
 
 			await _charityService.AddCharityAsync(charity);

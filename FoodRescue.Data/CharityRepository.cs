@@ -42,7 +42,6 @@ namespace FoodRescue.Data
 			var s =await GetByIdAsync(value.Id);
 			s.Email = value.Email;
 			s.City = value.City;
-			s.Password = value.Password;
 			s.Name = value.Name;
 			s.FoodType=value.FoodType;
 			s.Quantity = value.Quantity;
@@ -55,6 +54,11 @@ namespace FoodRescue.Data
 		public async Task<Charity> GetByNameAsync(string name)
 		{
 			return await _context.charities.FirstOrDefaultAsync(x => x.Name == name);
+		}
+
+		public async Task<Charity> GetByUserIdAsync(int userId)
+		{
+			return await _context.charities.FirstOrDefaultAsync(b => b.UserId == userId);
 		}
 	}
 }
