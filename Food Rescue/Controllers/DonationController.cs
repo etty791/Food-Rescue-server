@@ -19,11 +19,13 @@ namespace FoodRescue.API.Controllers
 		private readonly IDonationService _donationService;
 		private readonly IMapper _mapper;
 		private readonly IBusinessService _businessService;
-		public DonationController(IDonationService donationService, IMapper mapper, IBusinessService businessService)
+		private readonly ICharityService _charityService;
+		public DonationController(ICharityService charityService, IDonationService donationService, IMapper mapper, IBusinessService businessService)
 		{
 			_donationService = donationService;
 			_mapper = mapper;
 			_businessService = businessService;
+			_charityService = charityService;
 		}
 		// GET: api/<BusinessesController>
 		[HttpGet]
@@ -86,13 +88,27 @@ namespace FoodRescue.API.Controllers
 		[Authorize(Roles = "Charity")]
 		public async Task<ActionResult> Put(int id)
 		{
+			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+			if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+			{
+				return Unauthorized("לא ניתן לזהות את המשתמש מהטוקן.");
+			}
+
+			var charity = await _charityService.GetCharityByUserIdAsync(userId);
+
+			if (charity == null)
+			{
+				return BadRequest("לא נמצא עסק התואם למשתמש המחובר.");
+			}
+
 			var donation = await _donationService.GetDonationByIdAsync(id);
 			
 			if (donation == null)
 			{
 				return NotFound();
 			}
-			await _donationService.ClaimDonationAsync(id);
+			await _donationService.ClaimDonationAsync(id,charity.Id);
 			return Ok(donation);
 		}
 

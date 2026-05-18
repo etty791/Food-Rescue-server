@@ -12,6 +12,8 @@ namespace FoodRescue.Core.Repositories
 		public Task<IEnumerable<Charity>> GetAllAsync();
 		public Task<Charity> GetByIdAsync(int id);
 		public Task<Charity> GetByNameAsync(string name);
+		public Task<Charity> GetByUserIdAsync(int userId);
+
 		public Task AddAsync(Charity val);
 		public Task DeleteAsync(int id);
 		public Task UpdateAsync(int id, Charity value);
