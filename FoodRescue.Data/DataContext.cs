@@ -31,6 +31,13 @@ namespace FoodRescue.Data
 						v => v.ToString(),
 						v => Enum.Parse<eRole>(v));
 			});
+			modelBuilder.Entity<Donation>(d =>
+			{
+				d.Property(e => e.Status)
+				 .HasConversion(
+					 v => v.ToString(),
+					 v => Enum.Parse<eDonationStatus>(v));
+			});
 			modelBuilder.Entity<Business>()
 		.HasOne(b => b.User)
 		.WithMany()

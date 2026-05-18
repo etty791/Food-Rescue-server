@@ -46,15 +46,23 @@ namespace FoodRescue.Service
 
 		public async Task UpdateDonationAsync(int id, Donation val)
 		{
-			if (!val.IsClaimed) {
+			if (val.Status==eDonationStatus.Available) {
 				await _donationRepository.UpdateAsync(id, val);
 				await _donationRepository.SaveAsync();
 			}
 		}
-		public async Task ClaimDonationAsync(int id)
+		public async Task ClaimDonationAsync(int donationId,int charityId)
+		{
+			Donation d = await _donationRepository.GetByIdAsync(donationId);
+			d.Status=eDonationStatus.Claimed;
+			d.CharityId = charityId;
+			await _donationRepository.UpdateAsync(donationId, d);
+			await _donationRepository.SaveAsync();
+		}
+		public async Task CollectDonationAsync(int id)
 		{
 			Donation d = await _donationRepository.GetByIdAsync(id);
-			d.IsClaimed = true;
+			d.Status = eDonationStatus.Collected;
 			await _donationRepository.UpdateAsync(id, d);
 			await _donationRepository.SaveAsync();
 		}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FoodRescue.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace FoodRescue.Core.DTO
 		public string FoodType { get; set; }
 		public double Quantity { get; set; } // כמות ב-ק"ג
 		public DateTime dateTime { get; set; }
-		public bool IsClaimed { get; set; }
+		public eDonationStatus Status { get; set; }
 		public BusinessDTO Business { get; set; }
 
 	}

@@ -48,7 +48,7 @@ namespace FoodRescue.Data
 			s.dateTime = value.dateTime;
 			s.Quantity = value.Quantity;
 			s.FoodType = value.FoodType;
-			s.IsClaimed = value.IsClaimed;
+			s.Status = value.Status;
 		}
 		public async Task SaveAsync()
 		{
